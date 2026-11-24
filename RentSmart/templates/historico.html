@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block c %}
+<h1>Histórico de orçamentos</h1><p class="sub">Pesquise, filtre, consulte e exporte.</p>
+<form class="card row" style="margin:0 0 16px;align-items:end"><div style="flex:2;min-width:200px"><label for="q">Nome do cliente</label><input id="q" name="q" value="{{ q }}"></div>
+<div style="flex:1;min-width:160px"><label for="tipo">Tipo de imóvel</label><select id="tipo" name="tipo"><option value="">Todos</option>
+{% for v,n in [('apartamento','Apartamento'),('casa','Casa'),('estudio','Estúdio')] %}<option value="{{v}}" {{ 'selected' if tipo==v }}>{{n}}</option>{% endfor %}</select></div>
+<button>Filtrar</button><a class="btn alt" href="/historico.csv?q={{ q }}&tipo={{ tipo }}">Exportar CSV</a></form>
+<div class="card tw">{% if itens %}<table><tr><th>#</th><th>Data</th><th>Cliente</th><th>Imóvel</th><th class="num">Aluguel</th><th class="num">Taxa</th><th></th></tr>
+{% for o in itens %}<tr><td>{{ o.id }}</td><td>{{ o.criado_em }}</td><td>{{ o.nome }}</td><td>{{ o.tipo }} · {{ o.quartos }}q · {{ o.vagas }}v</td><td class="num">{{ o.aluguel|brl }}</td><td class="num">{{ o.parcelas }}x {{ o.valor_parcela|brl }}</td><td><a href="/orcamento/{{ o.id }}">Detalhes</a></td></tr>{% endfor %}</table>
+{% else %}<p class="sub">Nenhum orçamento encontrado para este filtro.</p>{% endif %}</div>{% endblock %}

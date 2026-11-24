@@ -1,0 +1,10 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RentSmart · R.M Imóveis</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body>
+<aside><div class="logo">🏢 Rent<span>Smart</span></div><small>Sistema Inteligente de Orçamento de Locação<br>R.M Imóveis</small>
+<a href="/" class="{{ 'on' if request.path=='/' }}">📊 Dashboard</a>
+<a href="/historico" class="{{ 'on' if request.path.startswith('/historico') }}">🗂️ Histórico e relatórios</a>
+<a href="/documentacao" class="{{ 'on' if request.path=='/documentacao' }}">📘 Documentação</a>
+<a href="/novo" class="btn">＋ Novo orçamento</a></aside>
+<main>{% block c %}{% endblock %}</main></body></html>

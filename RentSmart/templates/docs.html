@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block c %}
+<h1>Documentação do projeto</h1><p class="sub">UniFECAF · Algorithmic Thinking & Introduction to Object-Oriented Programming</p>
+<div class="card"><h2>Análise do problema</h2><p>A R.M Imóveis calculava orçamentos manualmente, com risco de erro nas regras comerciais. O RentSmart automatiza o aluguel mensal, a taxa contratual e a projeção de 12 meses.</p>
+<h2>Entradas</h2><p>Nome, e-mail, telefone, tipo de imóvel, quartos, vagas, crianças (apartamentos) e parcelas (1 a 5).</p>
+<h2>Processamentos</h2><ul><li>Aluguel-base por tipo e quartos.</li><li>Adicional de garagem.</li><li>Desconto de 5% (apartamento sem crianças) sobre aluguel-base + garagem.</li><li>Taxa contratual em parcelas, sempre separada do aluguel.</li><li>Projeção de 12 meses.</li></ul>
+<h2>Saídas</h2><p>Resumo financeiro, tabela de 12 meses, PDF, CSV (Excel e Google Planilhas) e histórico.</p></div>
+<div class="card" style="margin-top:16px"><h2>Regras de negócio</h2><div class="tw"><table><tr><th>Imóvel</th><th>Aluguel-base</th><th>Garagem</th><th>Desconto</th></tr>
+<tr><td>Apartamento</td><td>1q R$ 700 · 2q R$ 900</td><td>R$ 300 por vaga (máx. 1)</td><td>5% sem crianças</td></tr>
+<tr><td>Casa</td><td>1q R$ 900 · 2q R$ 1.150</td><td>R$ 300 por vaga (máx. 1)</td><td>Não há</td></tr>
+<tr><td>Estúdio</td><td>R$ 1.200</td><td>Pacote de 2 vagas R$ 250; extras R$ 60 (máx. 6)</td><td>Não há</td></tr></table></div>
+<p>Taxa contratual: R$ 2.000,00 em 1 a 5 parcelas, fora do aluguel mensal. Na projeção as parcelas ocupam os primeiros meses; centavos de arredondamento vão na última parcela.</p></div>
+<div class="card" style="margin-top:16px"><h2>Fluxograma</h2><ol class="flow"><li>Início</li><li>Ler dados do cliente; se inválidos, mostrar erro e voltar</li><li>Escolher imóvel, quartos e vagas; se incompatíveis, mostrar erro e voltar</li><li>Se apartamento, perguntar sobre crianças</li><li>Calcular base + garagem − desconto = aluguel mensal</li><li>Escolher parcelas (1 a 5) e calcular a parcela da taxa</li><li>Gerar projeção de 12 meses e salvar no histórico</li><li>Exibir resultado, PDF e CSV. Fim</li></ol></div>
+<div class="card" style="margin-top:16px"><h2>Classes</h2><div class="tw"><table><tr><th>Classe (arquivo)</th><th>Atributos</th><th>Métodos</th></tr>
+<tr><td><code>Cliente</code> (cliente.py)</td><td>_nome, _email, _telefone</td><td>propriedades, para_dict()</td></tr>
+<tr><td><code>Imovel</code> (imovel.py), base</td><td>_quartos, _vagas, _criancas</td><td>aluguel_base(), valor_vagas(), percentual_desconto()</td></tr>
+<tr><td><code>Apartamento, Casa, Estudio</code></td><td>herdam de Imovel; tabela de preços</td><td>sobrescrevem valor_vagas() e a validação de vagas</td></tr>
+<tr><td><code>Orcamento</code> (orcamento.py)</td><td>cliente, imovel, parcelas, base, aluguel, taxa</td><td>projecao(), para_dict()</td></tr>
+<tr><td><code>Relatorio</code> (relatorio.py)</td><td>—</td><td>salvar(), buscar(), csv_projecao(), pdf()</td></tr></table></div>
+<h2>Por que POO?</h2><p>Cada tipo de imóvel tem regras próprias de garagem e desconto. Com herança e polimorfismo, <code>Orcamento</code> chama os mesmos métodos sem cadeias de <code>if</code>, e novos tipos entram criando uma classe. O encapsulamento protege os dados validados e cada classe tem uma responsabilidade.</p></div>{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block c %}
+<h1>Orçamento #{{ oid }}</h1><p class="sub">{{ o.criado_em }} · R.M Imóveis</p>
+<div class="grid"><div class="card hero stat"><span>Aluguel mensal final</span><b>{{ o.aluguel|brl }}</b></div>
+<div class="card stat"><span>Taxa contratual (à parte)</span><b>{{ o.taxa|brl }}</b><span>{{ o.parcelas }}x de {{ o.valor_parcela|brl }}</span></div></div>
+<div class="card"><h2>Resumo financeiro</h2>
+<div class="sum"><span>Cliente</span><span>{{ o.cliente.nome }} · {{ o.cliente.email }} · {{ o.cliente.telefone }}</span></div>
+<div class="sum"><span>Imóvel</span><span>{{ o.imovel.tipo }} · {{ o.imovel.quartos }} quarto(s) · {{ o.imovel.vagas }} vaga(s)</span></div>
+<div class="sum"><span>Aluguel-base</span><span>{{ o.base|brl }}</span></div>
+<div class="sum"><span>Adicional de garagem</span><span>+ {{ o.vagas|brl }}</span></div>
+<div class="sum"><span>Subtotal</span><span>{{ o.subtotal|brl }}</span></div>
+<div class="sum"><span>Desconto ({{ o.pct }}%)</span><span>− {{ o.desconto|brl }}</span></div>
+<div class="sum t"><span>Aluguel mensal final</span><span>{{ o.aluguel|brl }}</span></div>
+<div class="sum"><span>Taxa contratual</span><span>{{ o.taxa|brl }} em {{ o.parcelas }}x de {{ o.valor_parcela|brl }}</span></div></div>
+<div class="card" style="margin-top:16px"><h2>Projeção financeira de 12 meses</h2><div class="tw"><table>
+<tr><th>Mês</th><th class="num">Aluguel</th><th class="num">Parcela da taxa</th><th class="num">Total previsto</th></tr>
+{% for l in proj %}<tr><td>{{ l.mes }}</td><td class="num">{{ l.aluguel|brl }}</td><td class="num">{{ l.parcela|brl if l.parcela else '—' }}</td><td class="num">{{ l.total|brl }}</td></tr>{% endfor %}</table></div></div>
+<div class="row"><a class="btn" href="/orcamento/{{ oid }}/orcamento.pdf">Gerar PDF do orçamento</a><a class="btn alt" href="/orcamento/{{ oid }}/projecao.csv">Exportar CSV</a>
+<button class="btn alt" onclick="print()">Imprimir orçamento</button><a class="btn alt" href="/novo">Novo orçamento</a></div>{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block c %}
+<h1>Novo orçamento</h1><p class="sub">Preencha as etapas. Os valores são calculados pelo servidor Python.</p>
+{% if erro %}<div class="err" role="alert">{{ erro }}</div>{% endif %}
+<form method="post" class="card" novalidate><div class="steps"><i></i><i></i><i></i><i></i><i></i></div>
+<section class="step"><h2>1. Dados do cliente</h2>
+<label for="nome">Nome completo</label><input id="nome" name="nome" value="{{ f.get('nome','') }}" required>
+<label for="email">E-mail</label><input id="email" name="email" type="email" value="{{ f.get('email','') }}" required>
+<label for="telefone">Telefone com DDD</label><input id="telefone" name="telefone" value="{{ f.get('telefone','') }}" placeholder="(11) 91234-5678" required></section>
+<section class="step"><h2>2. Escolha do imóvel</h2>
+<label for="tipo">Tipo</label><select id="tipo" name="tipo"><option value="apartamento">Apartamento</option><option value="casa">Casa</option><option value="estudio">Estúdio</option></select>
+<label for="quartos">Quartos</label><select id="quartos" name="quartos"></select></section>
+<section class="step"><h2>3. Adicionais</h2>
+<label for="vagas">Vagas de garagem</label><select id="vagas" name="vagas"></select><div class="note" id="nv"></div></section>
+<section class="step"><h2>4. Condições comerciais</h2><div id="cc"><label for="criancas">O cliente possui crianças?</label>
+<select id="criancas" name="criancas"><option value="sim">Sim</option><option value="nao">Não (5% de desconto)</option></select></div><div class="note" id="ncc"></div></section>
+<section class="step"><h2>5. Taxa contratual</h2><p class="sub">Taxa fixa de R$ 2.000,00, cobrada à parte do aluguel mensal.</p>
+<label for="parcelas">Parcelas</label><select id="parcelas" name="parcelas">{% for n in range(1,6) %}<option value="{{n}}">{{n}}x de R$ {{ '%.2f'|format(2000/n)|replace('.',',') }}</option>{% endfor %}</select></section>
+<div class="row"><button type="button" class="btn alt" id="ant">Voltar</button><button type="button" id="prox">Continuar</button><button id="env" style="display:none">Gerar orçamento</button></div></form>
+<script>
+const S=[...document.querySelectorAll('.step')],B=[...document.querySelectorAll('.steps i')];let p=0;const f={{ f|tojson }};
+function ir(n){p=n;S.forEach((s,i)=>s.classList.toggle('on',i==n));B.forEach((b,i)=>b.classList.toggle('on',i<=n));
+ant.style.visibility=n?'visible':'hidden';prox.style.display=n==4?'none':'';env.style.display=n==4?'':'none'}
+prox.onclick=()=>{if(p==0&&(!nome.value.trim()||!email.value.trim()||!telefone.value.trim())){alert('Preencha nome, e-mail e telefone.');return}ir(p+1)};
+ant.onclick=()=>ir(p-1);
+const T={apartamento:{q:[[1,'1 quarto · R$ 700,00'],[2,'2 quartos · R$ 900,00']],v:[0,1],n:'Vaga de garagem: R$ 300,00 (máximo de 1).'},
+casa:{q:[[1,'1 quarto · R$ 900,00'],[2,'2 quartos · R$ 1.150,00']],v:[0,1],n:'Vaga de garagem: R$ 300,00 (máximo de 1).'},
+estudio:{q:[[1,'Aluguel-base · R$ 1.200,00']],v:[0,2,3,4,5,6],n:'Pacote de 2 vagas por R$ 250,00; cada vaga adicional R$ 60,00.'}};
+function atualiza(){const t=T[tipo.value];quartos.innerHTML=t.q.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+vagas.innerHTML=t.v.map(v=>`<option value="${v}">${v==0?'Sem vaga':v+(v>1?' vagas':' vaga')}</option>`).join('');nv.textContent=t.n;
+const a=tipo.value=='apartamento';cc.style.display=a?'':'none';ncc.textContent=a?'Sem crianças, o apartamento recebe 5% de desconto sobre aluguel + adicionais.':'Casas e estúdios não têm desconto por crianças.';if(!a)criancas.value='sim'}
+tipo.onchange=atualiza;if(f.tipo)tipo.value=f.tipo;atualiza();
+for(const k of ['quartos','vagas','criancas','parcelas'])if(f[k])document.getElementById(k).value=f[k];
+ir(0);
+</script>{% endblock %}

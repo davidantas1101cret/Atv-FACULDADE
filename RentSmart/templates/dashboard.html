@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block c %}
+<h1>RentSmart</h1><p class="sub">Sistema Inteligente de Orçamento de Locação · R.M Imóveis</p>
+<div class="grid"><div class="card hero stat"><span>Orçamentos realizados</span><b>{{ total }}</b></div>
+<div class="card stat"><span>Valor médio dos aluguéis</span><b>{{ media|brl }}</b></div>
+<div class="card stat"><span>Ações rápidas</span><div class="row" style="margin-top:10px"><a class="btn" href="/novo">Novo orçamento</a><a class="btn alt" href="/historico">Relatórios</a></div></div></div>
+<div class="card"><h2>Últimos orçamentos</h2>
+{% if ultimos %}<div class="tw"><table><tr><th>Data</th><th>Cliente</th><th>Imóvel</th><th class="num">Aluguel mensal</th><th></th></tr>
+{% for o in ultimos %}<tr><td>{{ o.criado_em }}</td><td>{{ o.nome }}</td><td>{{ o.tipo }} · {{ o.quartos }}q</td><td class="num">{{ o.aluguel|brl }}</td><td><a href="/orcamento/{{ o.id }}">Abrir</a></td></tr>{% endfor %}</table></div>
+{% else %}<p class="sub">Nenhum orçamento ainda. Crie o primeiro em “Novo orçamento”.</p>{% endif %}</div>{% endblock %}
